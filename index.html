@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MVP Express — Kit 01 | Lead chama e some</title>
+
+  <style>
+    :root {
+      --creme: #FFF5D9;
+      --azul-escuro: #111B3A;
+      --off-white: #FCFBF5;
+      --laranja: #F78C2D;
+      --preto: #050505;
+      --azul: #4D8DAA;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Poppins", "Noto Sans", Arial, sans-serif;
+      background: var(--off-white);
+      color: var(--preto);
+      line-height: 1.6;
+    }
+
+    h1, h2, h3 {
+      font-family: "Cormorant Garamond", "Noto Serif", Georgia, serif;
+      color: var(--azul-escuro);
+      line-height: 1.1;
+      font-weight: 700;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1120px, 92%);
+      margin: 0 auto;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--laranja);
+      color: var(--azul-escuro);
+      font-weight: 700;
+      padding: 16px 28px;
+      border-radius: 999px;
+      transition: 0.25s ease;
+      box-shadow: 0 12px 30px rgba(247, 140, 45, 0.25);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 36px rgba(247, 140, 45, 0.35);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--creme);
+      color: var(--creme);
+      box-shadow: none;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(247, 140, 45, 0.12);
+      color: var(--laranja);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 22px;
+    }
+
+    .section {
+      padding: 88px 0;
+    }
+
+    .section-title {
+      max-width: 760px;
+      margin-bottom: 28px;
+    }
+
+    .section-title h2 {
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      margin-bottom: 16px;
+    }
+
+    .section-title p {
+      font-size: 1.08rem;
+      color: rgba(5, 5, 5, 0.74);
+    }
+
+    header {
+      background: var(--azul-escuro);
+      color: var(--off-white);
+      padding: 22px 0;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(255, 245, 217, 0.16);
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .brand strong {
+      font-family: "Cormorant Garamond", "Noto Serif", Georgia, serif;
+      font-size: 1.25rem;
+      letter-spacing: 0.04em;
+      color: var(--off-white);
+    }
+
+    .brand span {
+      font-size: 0.74rem;
+      color: var(--laranja);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 0.92rem;
+    }
+
+    .nav-links a {
+      color: rgba(252, 251, 245, 0.82);
+    }
+
+    .nav-links a:hover {
+      color: var(--laranja);
+    }
+
+    .hero {
+      background:
+        radial-gradient(circle at top right, rgba(77, 141, 170, 0.18), transparent 32%),
+        linear-gradient(135deg, var(--azul-escuro) 0%, #0b1228 100%);
+      color: var(--off-white);
+      padding: 110px 0 96px;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 54px;
+      align-items: center;
+    }
+
+    .hero h1 {
+      color: var(--off-white);
+      font-size: clamp(3rem, 7vw, 6.4rem);
+      max-width: 780px;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 span {
+      color: var(--laranja);
+    }
+
+    .hero p {
+      color: rgba(252, 251, 245, 0.82);
+      font-size: 1.15rem;
+      max-width: 640px;
+      margin-bottom: 30px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .hero-card {
+      background: rgba(252, 251, 245, 0.06);
+      border: 1px solid rgba(255, 245, 217, 0.16);
+      border-radius: 28px;
+      padding: 30px;
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-card h3 {
+      color: var(--creme);
+      font-size: 2rem;
+      margin-bottom: 18px;
+    }
+
+    .hero-card ul {
+      list-style: none;
+      display: grid;
+      gap: 14px;
+    }
+
+    .hero-card li {
+      color: rgba(252, 251, 245, 0.84);
+      padding-left: 26px;
+      position: relative;
+    }
+
+    .hero-card li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--laranja);
+      font-size: 1.4rem;
+      line-height: 1;
+    }
+
+    .problem {
+      background: var(--creme);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      margin-top: 34px;
+    }
+
+    .card {
+      background: var(--off-white);
+      border: 1px solid rgba(17, 27, 58, 0.08);
+      border-radius: 24px;
+      padding: 26px;
+      box-shadow: 0 14px 34px rgba(17, 27, 58, 0.06);
+    }
+
+    .card h3 {
+      font-size: 1.75rem;
+      margin-bottom: 12px;
+    }
+
+    .card p {
+      color: rgba(5, 5, 5, 0.72);
+    }
+
+    .dark {
+      background: var(--azul-escuro);
+      color: var(--off-white);
+    }
+
+    .dark h2,
+    .dark h3 {
+      color: var(--creme);
+    }
+
+    .dark p {
+      color: rgba(252, 251, 245, 0.78);
+    }
+
+    .framework {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-top: 36px;
+    }
+
+    .framework-item {
+      background: rgba(252, 251, 245, 0.06);
+      border: 1px solid rgba(255, 245, 217, 0.16);
+      border-radius: 22px;
+      padding: 24px;
+    }
+
+    .framework-letter {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: var(--laranja);
+      color: var(--azul-escuro);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .kit-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 44px;
+      align-items: start;
+    }
+
+    .offer-box {
+      background: var(--azul-escuro);
+      color: var(--off-white);
+      border-radius: 30px;
+      padding: 34px;
+      position: sticky;
+      top: 110px;
+    }
+
+    .offer-box h3 {
+      color: var(--creme);
+      font-size: 2.4rem;
+      margin-bottom: 14px;
+    }
+
+    .price {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin: 20px 0 8px;
+    }
+
+    .price strong {
+      font-family: "Cormorant Garamond", "Noto Serif", Georgia, serif;
+      font-size: 4.4rem;
+      color: var(--laranja);
+      line-height: 1;
+    }
+
+    .price span {
+      color: rgba(252, 251, 245, 0.76);
+    }
+
+    .includes {
+      display: grid;
+      gap: 14px;
+    }
+
+    .include-item {
+      background: var(--off-white);
+      border-left: 5px solid var(--laranja);
+      border-radius: 18px;
+      padding: 20px;
+    }
+
+    .include-item h3 {
+      font-size: 1.5rem;
+      margin-bottom: 6px;
+    }
+
+    .include-item p {
+      color: rgba(5, 5, 5, 0.72);
+    }
+
+    .for-who {
+      background: var(--creme);
+    }
+
+    .two-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 26px;
+      margin-top: 30px;
+    }
+
+    .check-list,
+    .x-list {
+      background: var(--off-white);
+      border-radius: 26px;
+      padding: 28px;
+      border: 1px solid rgba(17, 27, 58, 0.08);
+    }
+
+    .check-list h3,
+    .x-list h3 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .check-list ul,
+    .x-list ul {
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+
+    .check-list li,
+    .x-list li {
+      padding-left: 28px;
+      position: relative;
+    }
+
+    .check-list li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--azul);
+      font-weight: 800;
+    }
+
+    .x-list li::before {
+      content: "—";
+      position: absolute;
+      left: 0;
+      color: var(--laranja);
+      font-weight: 800;
+    }
+
+    .final-cta {
+      text-align: center;
+      background: linear-gradient(135deg, var(--azul-escuro), #080d20);
+      color: var(--off-white);
+      padding: 96px 0;
+    }
+
+    .final-cta h2 {
+      color: var(--creme);
+      font-size: clamp(2.3rem, 5vw, 4.8rem);
+      max-width: 880px;
+      margin: 0 auto 18px;
+    }
+
+    .final-cta p {
+      max-width: 680px;
+      margin: 0 auto 30px;
+      color: rgba(252, 251, 245, 0.78);
+    }
+
+    .faq {
+      background: var(--off-white);
+    }
+
+    .faq-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 30px;
+    }
+
+    details {
+      background: var(--creme);
+      border: 1px solid rgba(17, 27, 58, 0.08);
+      border-radius: 18px;
+      padding: 20px 22px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--azul-escuro);
+    }
+
+    details p {
+      margin-top: 12px;
+      color: rgba(5, 5, 5, 0.75);
+    }
+
+    footer {
+      background: var(--azul-escuro);
+      color: rgba(252, 251, 245, 0.68);
+      padding: 28px 0;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 860px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero-grid,
+      .kit-grid,
+      .two-columns {
+        grid-template-columns: 1fr;
+      }
+
+      .cards,
+      .framework {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 76px 0;
+      }
+
+      .section {
+        padding: 68px 0;
+      }
+
+      .offer-box {
+        position: static;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <strong>Marzochio</strong>
+        <span>Treinamentos</span>
+      </div>
+
+      <nav class="nav-links">
+        <a href="#problema">Problema</a>
+        <a href="#metodo">Método</a>
+        <a href="#kit">O que recebe</a>
+        <a href="#faq">Dúvidas</a>
+        <a class="btn" href="https://pay.hotmart.com/N104523901J">Entrar agora</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="hero">
+      <div class="container hero-grid">
+
+        <div>
+          <div class="badge">Kit 01 — Lead chama e some</div>
+
+          <h1>
+            Pare de perder leads que já chegaram até você.
+          </h1>
+
+          <p>
+            Um kit prático para empresários que vendem serviços e querem transformar conversas soltas no WhatsApp em um processo comercial mais claro, seguro e conduzido.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn" href="https://pay.hotmart.com/SEU-CHECKOUT-AQUI">
+              Quero acessar o Kit 01
+            </a>
+
+            <a class="btn btn-secondary" href="#kit">
+              Ver o que está incluso
+            </a>
+          </div>
+        </div>
+
+        <div class="hero-card">
+          <h3>Lead não quer apenas resposta.</h3>
+          <ul>
+            <li>Ele quer entender se aquilo serve para o caso dele.</li>
+            <li>Ele quer segurança para continuar a conversa.</li>
+            <li>Ele quer um próximo passo claro.</li>
+            <li>Ele quer alívio e trilho.</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="problema" class="section problem">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>O lead chama, pergunta, recebe resposta… e some.</h2>
+          <p>
+            Esse é um dos gargalos mais comuns em negócios que vendem serviços pelo WhatsApp.
+          </p>
+        </div>
+
+        <div class="cards">
+          <div class="card">
+            <h3>Você responde.</h3>
+            <p>
+              O lead pergunta como funciona, você explica. Ele pergunta preço, você envia. Ele tira dúvidas, você responde.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>Ele esfria.</h3>
+            <p>
+              A curiosidade inicial é satisfeita, mas a conversa não ganha profundidade, segurança ou urgência.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>A conversa morre.</h3>
+            <p>
+              O atendimento termina com “fico à disposição” e o lead desaparece sem dizer sim, não ou ainda não.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>O problema nem sempre está no tráfego.</h2>
+          <p>
+            Muitas vezes, o gargalo está na condução da conversa. O lead não some do nada. Ele some quando a conversa perde motivo, segurança e direção.
+          </p>
+        </div>
+
+        <div class="cards">
+          <div class="card">
+            <h3>Sem motivo</h3>
+            <p>
+              O lead não vê por que continuar conversando depois que a primeira dúvida foi respondida.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>Sem segurança</h3>
+            <p>
+              O lead sente risco, dúvida ou desconforto e prefere ficar em silêncio.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>Sem direção</h3>
+            <p>
+              O lead não recebe um próximo passo claro e a decisão fica solta.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="metodo" class="section dark">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>O Kit 01 organiza sua conversa com o C.I.C.P.</h2>
+          <p>
+            Uma estrutura simples para o empresário parar de apenas responder e começar a conduzir o primeiro atendimento.
+          </p>
+        </div>
+
+        <div class="framework">
+          <div class="framework-item">
+            <div class="framework-letter">C</div>
+            <h3>Contexto</h3>
+            <p>Entender o que fez o lead procurar a solução agora.</p>
+          </div>
+
+          <div class="framework-item">
+            <div class="framework-letter">I</div>
+            <h3>Impacto</h3>
+            <p>Mostrar o peso do problema e o custo de continuar como está.</p>
+          </div>
+
+          <div class="framework-item">
+            <div class="framework-letter">C</div>
+            <h3>Critério</h3>
+            <p>Descobrir o que o lead considera importante para decidir.</p>
+          </div>
+
+          <div class="framework-item">
+            <div class="framework-letter">P</div>
+            <h3>Próximo passo</h3>
+            <p>Conduzir a conversa para um avanço claro e natural.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="kit" class="section">
+      <div class="container kit-grid">
+
+        <div class="offer-box">
+          <h3>MVP Express</h3>
+          <p>
+            Assinatura de entrada para empresários que querem construir previsibilidade comercial sem depender de sorte, indicação ou improviso.
+          </p>
+
+          <div class="price">
+            <strong>R$50</strong>
+            <span>/ mês</span>
+          </div>
+
+          <p>
+            Acesso ao Kit 01 — Lead chama e some.
+          </p>
+
+          <br />
+
+          <a class="btn" href="https://pay.hotmart.com/SEU-CHECKOUT-AQUI">
+            Entrar agora
+          </a>
+        </div>
+
+        <div>
+          <div class="section-title">
+            <h2>O que você recebe no Kit 01</h2>
+            <p>
+              Materiais práticos para diagnosticar, corrigir e acompanhar o gargalo de leads que somem no WhatsApp.
+            </p>
+          </div>
+
+          <div class="includes">
+            <div class="include-item">
+              <h3>Aula curta</h3>
+              <p>Entenda por que o lead chama e some, e como corrigir a condução da conversa.</p>
+            </div>
+
+            <div class="include-item">
+              <h3>Script de primeiro atendimento</h3>
+              <p>Modelo curto com perguntas de qualificação baseadas no C.I.C.P.</p>
+            </div>
+
+            <div class="include-item">
+              <h3>Sequência de follow-up</h3>
+              <p>Mensagens para retomar conversas paradas sem parecer cobrança.</p>
+            </div>
+
+            <div class="include-item">
+              <h3>Planilha de controle de leads</h3>
+              <p>Controle simples para registrar status, etapa da conversa e motivo provável do sumiço.</p>
+            </div>
+
+            <div class="include-item">
+              <h3>Tarefa prática das 10 conversas</h3>
+              <p>Exercício para transformar sensação em diagnóstico comercial.</p>
+            </div>
+
+            <div class="include-item">
+              <h3>Métrica do mês</h3>
+              <p>Acompanhe a taxa de retomada dos leads e veja se sua condução está melhorando.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section for-who">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Para quem é o MVP Express?</h2>
+          <p>
+            Este kit foi criado para empresários que vendem serviços e usam o WhatsApp como canal de conversão.
+          </p>
+        </div>
+
+        <div class="two-columns">
+          <div class="check-list">
+            <h3>É para você se:</h3>
+            <ul>
+              <li>Leads chamam e somem com frequência.</li>
+              <li>Você sente que responde muito, mas converte pouco.</li>
+              <li>Você manda orçamento e o lead desaparece.</li>
+              <li>Você quer organizar melhor o atendimento comercial.</li>
+              <li>Você vende serviços, mentorias, consultorias ou soluções personalizadas.</li>
+            </ul>
+          </div>
+
+          <div class="x-list">
+            <h3>Não é para você se:</h3>
+            <ul>
+              <li>Você busca apenas frases prontas sem diagnóstico.</li>
+              <li>Você não quer analisar suas conversas reais.</li>
+              <li>Você espera resolver vendas apenas com mais tráfego.</li>
+              <li>Você não pretende aplicar os materiais no WhatsApp.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="final-cta">
+      <div class="container">
+        <h2>Seu lead não precisa de mais respostas soltas.</h2>
+        <p>
+          Ele precisa de uma conversa que gere clareza, segurança e direção. Entre no MVP Express e comece pelo Kit 01.
+        </p>
+
+        <a class="btn" href="https://pay.hotmart.com/SEU-CHECKOUT-AQUI">
+          Quero acessar por R$50/mês
+        </a>
+      </div>
+    </section>
+
+    <section id="faq" class="section faq">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Dúvidas frequentes</h2>
+          <p>
+            Algumas respostas rápidas antes de você entrar no MVP Express.
+          </p>
+        </div>
+
+        <div class="faq-grid">
+          <details>
+            <summary>O MVP Express é uma assinatura?</summary>
+            <p>
+              Sim. A proposta é entregar um kit mensal de melhoria comercial, cada mês corrigindo um gargalo específico do processo de vendas.
+            </p>
+          </details>
+
+          <details>
+            <summary>O Kit 01 serve para qualquer tipo de negócio?</summary>
+            <p>
+              Ele foi pensado principalmente para empresários que vendem serviços e usam WhatsApp para conversar com leads.
+            </p>
+          </details>
+
+          <details>
+            <summary>Preciso ter equipe comercial?</summary>
+            <p>
+              Não. O kit também serve para empresários que fazem o próprio atendimento e querem estruturar melhor a condução das conversas.
+            </p>
+          </details>
+
+          <details>
+            <summary>O material é teórico ou prático?</summary>
+            <p>
+              O foco é prático. O kit inclui script, checklist, planilha, follow-up, tarefa prática e métrica do mês.
+            </p>
+          </details>
+
+          <details>
+            <summary>Onde acesso após a compra?</summary>
+            <p>
+              Após a confirmação do pagamento, o acesso será liberado pela plataforma da Hotmart.
+            </p>
+          </details>
+
+          <details>
+            <summary>Posso cancelar depois?</summary>
+            <p>
+              Sim. Como é uma assinatura de entrada, você poderá gerenciar seu acesso conforme as regras da Hotmart.
+            </p>
+          </details>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      Marzochio Treinamentos — MVP Express | Matriz de Vendas Previsíveis
+    </div>
+  </footer>
+
+</body>
+</html>
